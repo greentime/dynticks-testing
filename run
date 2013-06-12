@@ -1,0 +1,52 @@
+#!/bin/bash
+
+NR_CPUS=$(getconf  _NPROCESSORS_ONLN)
+
+# Migrate nocb tasks to CPU 0
+# Beware, this assume that there is no online CPU > NR_CPUS
+for CPU in $(seq $(($NR_CPUS-1)))
+do
+	PIDS=$(ps -o pid= -C rcuob/$CPU,rcuos/$CPU,rcuop/$CPU)
+	for PID in $PIDS
+	do
+		taskset -cp 0 $PID
+	done
+
+done
+
+# Migrate irqs to CPU 0
+for D in $(ls /proc/irq)
+do
+	if [[ -x "/proc/irq/$D" && $D != "0" ]]
+	then
+		echo $D
+		echo 1 > /proc/irq/$D/smp_affinity
+	fi
+done
+
+# Delay the annoying vmstat timer far away
+sysctl vm.stat_interval=120
+
+# Shutdown nmi watchdog as it uses perf events
+sysctl -w kernel.watchdog=0
+
+DIR=/sys/kernel/debug/tracing
+echo > $DIR/trace
+echo 0 > $DIR/tracing_on
+# Uncomment the below for more details on what disturbs the CPU
+#echo 0 > $DIR/events/irq/enable
+#echo 1 > $DIR/events/sched/sched_switch/enable
+#echo 1 > $DIR/events/workqueue/workqueue_queue_work/enable
+echo 1 > $DIR/events/workqueue/workqueue_execute_start/enable
+echo 1 > $DIR/events/timer/hrtimer_expire_entry/enable
+echo 1 > $DIR/events/timer/tick_stop/enable
+echo nop > $DIR/current_tracer
+echo 1 > $DIR/tracing_on
+
+# Run a 10 secs user loop on CPU 1
+taskset -c 1 ./user_loop &
+sleep 10
+killall user_loop
+
+# Checkout the trace in trace.1
+cat /sys/kernel/debug/tracing/per_cpu/cpu1/trace > trace.1

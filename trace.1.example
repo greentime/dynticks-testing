@@ -1,0 +1,25 @@
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 1128/1128   #P:4
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+       user_loop-1176  [001] d.h1   148.052583: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=147800006870
+       user_loop-1176  [001] d..1   148.052604: tick_stop: success=yes msg= 
+       user_loop-1176  [001] d.h1   149.051973: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=148800001673
+       user_loop-1176  [001] d.h1   149.751554: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=149500003663
+       user_loop-1176  [001] d.h1   150.750949: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=150500001115
+       user_loop-1176  [001] d.h1   151.750347: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=151500001116
+       user_loop-1176  [001] d.h1   152.749745: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=152500001109
+       user_loop-1176  [001] d.h1   153.749143: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=153500001188
+       user_loop-1176  [001] d.h1   154.748540: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=154500001048
+       user_loop-1176  [001] d.h1   155.747938: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=155500001120
+       user_loop-1176  [001] d.h1   156.747336: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=156500001196
+       user_loop-1176  [001] d.h1   157.746734: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=157500001219
+           <...>-1179  [001] d.h1   158.076540: hrtimer_expire_entry: hrtimer=ffff880107c8d500 function=tick_sched_timer now=157830004100
+           <...>-1179  [001] d..1   158.076560: tick_stop: success=yes msg= 
