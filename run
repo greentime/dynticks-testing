@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Full dyntick CPU on which we'll run the user loop,
+# it must be part of nohz_full kernel parameter
+TARGET=1
+
 NR_CPUS=$(getconf  _NPROCESSORS_ONLN)
 
 # Migrate nocb tasks to CPU 0
@@ -43,10 +47,10 @@ echo 1 > $DIR/events/timer/tick_stop/enable
 echo nop > $DIR/current_tracer
 echo 1 > $DIR/tracing_on
 
-# Run a 10 secs user loop on CPU 1
-taskset -c 1 ./user_loop &
+# Run a 10 secs user loop on target
+taskset -c $TARGET ./user_loop &
 sleep 10
 killall user_loop
 
-# Checkout the trace in trace.1
-cat /sys/kernel/debug/tracing/per_cpu/cpu1/trace > trace.1
+# Checkout the trace in trace.* file
+cat /sys/kernel/debug/tracing/per_cpu/cpu$TARGET/trace > trace.$TARGET
