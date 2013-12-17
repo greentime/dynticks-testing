@@ -34,6 +34,9 @@ sysctl vm.stat_interval=120
 # Shutdown nmi watchdog as it uses perf events
 sysctl -w kernel.watchdog=0
 
+# Pin the writeback workqueue to CPU0
+echo 1 > /sys/bus/workqueue/devices/writeback/cpumask
+
 DIR=/sys/kernel/debug/tracing
 echo > $DIR/trace
 echo 0 > $DIR/tracing_on
