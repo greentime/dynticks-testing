@@ -4,18 +4,14 @@
 # it must be part of nohz_full kernel parameter
 TARGET=1
 
-NR_CPUS=$(getconf  _NPROCESSORS_ONLN)
-
-# Migrate nocb tasks to CPU 0
-# Beware, this assume that there is no online CPU > NR_CPUS
-for CPU in $(seq $(($NR_CPUS-1)))
+# Migrate all possible tasks to CPU 0
+for P in $(ls /proc)
 do
-	PIDS=$(ps -o pid= -C rcuob/$CPU,rcuos/$CPU,rcuop/$CPU)
-	for PID in $PIDS
-	do
-		taskset -cp 0 $PID
-	done
-
+	if [ -x "/proc/$P/task/" ]
+	then
+		echo $P
+		taskset -acp 0 $P
+	fi
 done
 
 # Migrate irqs to CPU 0
